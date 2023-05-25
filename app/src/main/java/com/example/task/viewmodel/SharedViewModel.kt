@@ -16,6 +16,7 @@ import com.example.task.retrofit.ApiInterface
 import com.example.task.retrofit.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 
 class SharedViewModel : ViewModel() {
@@ -28,9 +29,14 @@ class SharedViewModel : ViewModel() {
     }
 
     suspend fun login() : Boolean{
-        val retrofit = RetrofitClient.buildService(ApiInterface::class.java)
-        var loginResponse = retrofit.login(LoginRequest(phoneNumber.value))
-        return true
+        try{
+            val retrofit = RetrofitClient.buildService(ApiInterface::class.java)
+            var loginResponse = retrofit.login(LoginRequest(phoneNumber.value))
+            return true
+        }
+       catch (e : Error){
+           return false
+       }
     }
 
     fun setOtp(otp: String) {
@@ -38,10 +44,15 @@ class SharedViewModel : ViewModel() {
     }
 
     suspend fun loginWithOtp(): Boolean {
-        val retrofit = RetrofitClient.buildService(ApiInterface::class.java)
-        var res = retrofit.otpLogin(OtpLoginRequest(phoneNumber.value, otp.value))
-        AppPreferences.getSharedPreference().edit().putString("token", res.token).apply()
-        Log.d(ContentValues.TAG, "Token $res")
-        return true
+        try{
+            val retrofit = RetrofitClient.buildService(ApiInterface::class.java)
+            var res = retrofit.otpLogin(OtpLoginRequest(phoneNumber.value, otp.value))
+            AppPreferences.getSharedPreference().edit().putString("token", res.token).apply()
+            Log.d(ContentValues.TAG, "Token $res")
+            return true
+        }
+        catch (e : Error){
+            return false
+        }
     }
 }

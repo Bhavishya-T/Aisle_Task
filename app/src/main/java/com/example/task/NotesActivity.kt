@@ -4,6 +4,7 @@ import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +15,7 @@ import com.example.task.fragments.NotesFragment
 import com.example.task.fragments.ProfileFragment
 import com.example.task.viewmodel.NotesViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -30,7 +32,7 @@ class NotesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
         notesViewModel = ViewModelProvider(this)[NotesViewModel::class.java]
-        lifecycleScope.launch {
+        lifecycleScope.launch(handler){
             val dialogJob = launch {
                 delay(1000)
                 try {
@@ -40,8 +42,13 @@ class NotesActivity : AppCompatActivity() {
                     hideLoadingDialog()
                 }
             }
-            notesViewModel.getLikesList()
-            loadFragment(NotesFragment())
+            val result = notesViewModel.getLikesList()
+            if(result){
+                loadFragment(NotesFragment())
+            }
+            else{
+                showErrorView()
+            }
             dialogJob.cancel()
         }
         bottomNav = findViewById(R.id.bottomNav)
@@ -72,6 +79,17 @@ class NotesActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private val handler = CoroutineExceptionHandler { _, _ ->
+        showErrorView()
+    }
+
+    private fun showErrorView() {
+        val mainView = findViewById<BottomNavigationView>(R.id.bottomNav)
+        mainView.visibility = View.GONE
+        val errorView = findViewById<TextView>(R.id.activityErrorView)
+        errorView.visibility = View.VISIBLE
     }
 
     private fun hideLoadingDialog() {

@@ -18,6 +18,7 @@ import com.example.task.retrofit.ApiInterface
 import com.example.task.retrofit.RetrofitClient
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -62,13 +63,20 @@ class EnterOtpFragment : BaseFragment() {
         continueButton.setOnClickListener {
             val otp = otpText.text.toString()
             sharedViewModel.setOtp(otp)
-            sharedViewModel.viewModelScope.launch {
+            sharedViewModel.viewModelScope.launch(handler) {
                 val response = sharedViewModel.loginWithOtp()
                 if(response){
                     val intent = Intent(activity, NotesActivity::class.java)
                     startActivity(intent)
                 }
+                else{
+                    showError(view)
+                }
             }
         }
+    }
+
+    private val handler = CoroutineExceptionHandler { _, _ ->
+        view?.let { showError(it) }
     }
 }
