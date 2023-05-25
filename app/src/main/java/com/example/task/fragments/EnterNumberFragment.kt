@@ -4,8 +4,10 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.lifecycle.viewModelScope
 import com.example.task.R
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.launch
 
 class EnterNumberFragment : BaseFragment() {
 
@@ -25,9 +27,11 @@ class EnterNumberFragment : BaseFragment() {
         continueButton.setOnClickListener {
             val data = "+91"+phoneNumber.text.toString()
             sharedViewModel.setData(data)
-            val response = sharedViewModel.login()
-            if(response){
-                goToNextScreen()
+            sharedViewModel.viewModelScope.launch{
+                val response = sharedViewModel.login()
+                if(response){
+                    goToNextScreen()
+                }
             }
         }
     }

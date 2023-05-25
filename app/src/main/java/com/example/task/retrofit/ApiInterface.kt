@@ -6,6 +6,7 @@ import com.example.task.models.NotesResponse
 import com.example.task.models.OtpLoginRequest
 import com.example.task.models.OtpLoginResponse
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -14,11 +15,11 @@ import retrofit2.http.POST
 interface ApiInterface {
 
     @POST("users/phone_number_login")
-    fun login(@Body loginRequest: LoginRequest): Call<LoginResponse>
+    suspend fun login(@Body loginRequest: LoginRequest): LoginResponse
 
     @POST("users/verify_otp")
-    fun otpLogin(@Body otpLoginRequest: OtpLoginRequest): Call<OtpLoginResponse>
+    suspend fun otpLogin(@Body otpLoginRequest: OtpLoginRequest): OtpLoginResponse
 
     @GET("users/test_profile_list")
-    fun getNotes(@Header("Authorization") auth_token : String?): Call<NotesResponse>
+    suspend fun getNotes(@Header("Authorization") auth_token : String?): NotesResponse
 }

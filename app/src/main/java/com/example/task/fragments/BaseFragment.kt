@@ -33,5 +33,4 @@ abstract class BaseFragment : Fragment() {
     }
 
     abstract fun setupUI(view: View)
-
 }

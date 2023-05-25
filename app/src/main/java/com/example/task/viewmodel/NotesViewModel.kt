@@ -1,20 +1,29 @@
 package com.example.task.viewmodel
 
+import android.content.ContentValues
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.task.database.AppPreferences
 import com.example.task.models.LikesObject
 import com.example.task.models.NotesResponse
 import com.example.task.models.Profiles
+import com.example.task.retrofit.ApiInterface
+import com.example.task.retrofit.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class NotesViewModel : ViewModel() {
+
+    lateinit var notesResponse : NotesResponse
     fun getData() : NotesResponse{
-        var notesResponse : NotesResponse
-        var profile1 : Profiles
-        profile1 = Profiles("Ajith","https://testimages.aisle.co/dd510d5260eeebcdc7d7fc752c598c39728894004.png")
-        var profile2 : Profiles
-        profile2 = Profiles("Ishant","https://testimages.aisle.co/58b125e52d319c0390fc2d68b7da2ba6729804903.png")
-        var likesObject : LikesObject
-        likesObject = LikesObject(mutableListOf(profile1,profile2),false,2)
-        notesResponse = NotesResponse(null,likesObject)
         return notesResponse
+    }
+
+    suspend fun getLikesList() {
+        val retrofit = RetrofitClient.buildService(ApiInterface::class.java)
+        val res=AppPreferences.getSharedPreference().getString("token","")
+        Log.d(ContentValues.TAG, res!!)
+        notesResponse = retrofit.getNotes(res)
     }
 }

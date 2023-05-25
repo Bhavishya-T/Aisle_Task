@@ -7,7 +7,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 object RetrofitClient {
-    private val client = OkHttpClient.Builder().build()
+    private val interceptor = run {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.apply {
+            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        }
+    }
+
+    private val client = OkHttpClient.Builder()
+        .addInterceptor(interceptor)
+        .build()
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://app.aisle.co/V1/")
