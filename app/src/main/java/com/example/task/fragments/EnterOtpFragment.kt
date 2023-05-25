@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.lifecycle.viewModelScope
 import com.example.task.NotesActivity
 import com.example.task.R
 import com.example.task.models.NotesResponse
@@ -17,6 +18,8 @@ import com.example.task.retrofit.ApiInterface
 import com.example.task.retrofit.RetrofitClient
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -56,15 +59,24 @@ class EnterOtpFragment : BaseFragment() {
         }
         time.start()
 
-        val otpText = view.findViewById<TextInputEditText>(R.id.number)
+        val otpText = view.findViewById<TextInputEditText>(R.id.code)
         continueButton.setOnClickListener {
             val otp = otpText.text.toString()
             sharedViewModel.setOtp(otp)
-            val response = sharedViewModel.loginWithOtp()
-            if(response){
-                val intent = Intent(activity, NotesActivity::class.java)
-                startActivity(intent)
+            sharedViewModel.viewModelScope.launch(handler) {
+                val response = sharedViewModel.loginWithOtp()
+                if(response){
+                    val intent = Intent(activity, NotesActivity::class.java)
+                    startActivity(intent)
+                }
+                else{
+                    showError(view)
+                }
             }
         }
+    }
+
+    private val handler = CoroutineExceptionHandler { _, _ ->
+        view?.let { showError(it) }
     }
 }

@@ -10,8 +10,15 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomNav"
-        />
+        android:layout_above="@+id/bottomNav" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:visibility="gone" />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,10 +26,20 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
+        android:scrollIndicators="left"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/nav_menu"
-        android:scrollIndicators="left"/>
+        app:menu="@menu/nav_menu" />
+
+    <TextView
+        android:id="@+id/activityErrorView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center"
+        android:text="Nothing to show!"
+        android:textSize="20sp"
+        android:visibility="gone" />
 </RelativeLayout>
 

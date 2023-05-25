@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/fullView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -106,5 +107,13 @@
             android:text="1:00"
             android:textSize="18sp"></TextView>
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/baseErrorView"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="20sp"
+        android:text="Nothing to show!"
+        android:visibility="gone"/>
 </LinearLayout>

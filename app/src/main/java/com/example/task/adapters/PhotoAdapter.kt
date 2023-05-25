@@ -46,18 +46,11 @@ class PhotoAdapter(var context: Context) : RecyclerView.Adapter<PhotoAdapter.Vie
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onBindViewHolder(holder: PhotoAdapter.ViewHolder, position: Int) {
         var current = data.profiles[position]
-        if(position==0){
-            Glide.with(context)
-                .load(R.mipmap.img2_foreground)//current.avatar, test data
-                .apply(RequestOptions().override(450, 600))
-                .into(holder.image)
-        }
-        if(position==1){
-            Glide.with(context)
-                .load(R.mipmap.img3_foreground)//current.avatar, test data
-                .apply(RequestOptions().override(450, 600))
-                .into(holder.image)
-        }
+        Glide.with(context)
+            .load(current.avatar)//current.avatar, test data
+            .apply(RequestOptions().override(450, 600))
+            .into(holder.image)
+
         if (!shouldShow) {
             holder.image.setRenderEffect(
                 RenderEffect.createBlurEffect(
